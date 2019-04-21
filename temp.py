@@ -25,8 +25,8 @@ def getCountours(frame):
         contours, _ = cv2.findContours(frame, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
         for (i, c) in enumerate(contours):
                 tl = c[:,0,:] 
-                area(tl)
-                # print("i = ",i,"  ",tl.shape, "- Area -- ", area(tl))
+                # area(tl)
+                print("i = ",i,"  ",tl.shape, "- Area -- ", area(tl))
 
         print(len(contours))
         cv2.drawContours(image, contours, -1, (0,255,0), 1)
@@ -35,8 +35,8 @@ def getCountours(frame):
 
 def showVideo(videoName):
         locaiton = '../BDDA/test/camera_videos/'+videoName+'.mp4'
-        cap = cv2.VideoCapture(locaiton)
-        # cap = cv2.VideoCapture(0)
+        # cap = cv2.VideoCapture(locaiton)
+        cap = cv2.VideoCapture(0)
         if (cap.isOpened()== False): 
                 print("Error opening video stream or file")
         while(cap.isOpened()):
@@ -64,6 +64,6 @@ for v in videos:
         showVideo(v)
 
 # TODO:
-#         1. Find the exact relation between rate of change of area and rate of approach 
-#         2. Histogram equalisation for dark images 
+#         1. Find the exact relation between rate of change of area and rate of approach
+#         2. Histogram equalisation for dark images
 #         3. Extract image from inside object in YOLO
