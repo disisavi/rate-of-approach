@@ -5,6 +5,7 @@
 ############################################
 
 
+import cv2 as cv
 import cv2
 import argparse
 import numpy as np
@@ -39,6 +40,16 @@ def draw_prediction(img, class_id, confidence, x, y, x_plus_w, y_plus_h):
     cv2.rectangle(img, (x,y), (x_plus_w,y_plus_h), color, 2)
 
     cv2.putText(img, label, (x-10,y-10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+    if(label=="dog"):
+        imgray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
+        imm=imgray[y:y_plus_h,x:x_plus_w]
+        im=np.zeros_like(imm)
+        ret, thresh = cv.threshold(imm, 140, 255, 0)
+        contours,hierarchy = cv.findContours(thresh, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
+        cont=cv.drawContours(im, contours, -1, (255,255,255),1)
+        cv2.imshow("im",im)
+        cv2.waitKey(0)
+		
 
     
 image = cv2.imread(args.image)
