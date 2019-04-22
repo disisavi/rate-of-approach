@@ -78,7 +78,7 @@ def getObject(image, net, scale):
 
 def main():
     global COLORS
-    location = '../BDDA/test/camera_videos/526.mp4'
+    location = '../BDDA/test/camera_videos/515.mp4'
     args_config = './yolov3.cfg'
     args_weights = '../yolov3.weights'
     args_classes = './yolov3.txt'
