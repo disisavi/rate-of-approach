@@ -1,11 +1,10 @@
 import cv2 as cv
 import cv2
 import numpy as np
-
+import objtracking as oj
 COLORS = None
 classes = None
-
-
+trackObject = oj.ObjTracking()
 def get_output_layers(net):
     layer_names = net.getLayerNames()
 
@@ -34,6 +33,7 @@ def draw_prediction(img, class_id, confidence, x, y, x_plus_w, y_plus_h):
 
 
 def getObject(image, net, scale):
+    super trackObject
     Width = image.shape[1]
     Height = image.shape[0]
 
@@ -71,6 +71,7 @@ def getObject(image, net, scale):
         y = box[1]
         w = box[2]
         h = box[3]
+        trackObject.calc_centroid(box)
         draw_prediction(image, class_ids[i], confidences[i], round(x), round(y), round(x + w), round(y + h))
 
     cv2.imshow("object detection", image)
@@ -78,7 +79,7 @@ def getObject(image, net, scale):
 
 def main():
     global COLORS
-    location = '../BDDA/test/camera_videos/515.mp4'
+    location = '../567.mp4'
     args_config = './yolov3.cfg'
     args_weights = '../yolov3.weights'
     args_classes = './yolov3.txt'
