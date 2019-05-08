@@ -73,7 +73,8 @@ def getObject(image, net, scale):
                 boxes.append([x, y, w, h])
 
     indices = cv2.dnn.NMSBoxes(boxes, confidences, conf_threshold, nms_threshold)
-
+    # at this point all the objects for this frame are detected. Convert the orignal tracker back into the form were it will take all teh frames at once and assign ID
+    # and then I will iterate through that object list and assign values like confidence etc
     for i in indices:
         i = i[0]
         box = boxes[i]
@@ -89,7 +90,7 @@ def getObject(image, net, scale):
 
 def main():
     global COLORS
-    location = '../BDDA/training/camera_videos/567.mp4'
+    location = '../BDDA/training/camera_videos/1549.mp4'
     args_config = './yolov3.cfg'
     args_weights = '../yolov3.weights'
     args_classes = './yolov3.txt'
