@@ -1,10 +1,13 @@
-import cv2 as cv
 import cv2
 import numpy as np
 import objtracking as oj
+
 COLORS = None
 classes = None
+obj_Dict = {}
 trackObject = oj.ObjTracking()
+
+
 def get_output_layers(net):
     layer_names = net.getLayerNames()
 
@@ -21,6 +24,12 @@ def draw_prediction(img, class_id, confidence, x, y, x_plus_w, y_plus_h):
         cv2.rectangle(img, (x, y), (x_plus_w, y_plus_h), color, 2)
 
         cv2.putText(img, label, (x - 10, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
+        box = [x, y, x_plus_w, y_plus_h]
+        idObject = trackObject.calc_centroid(box)
+        if (idObject > -1):
+            idObject = str(idObject)
+            # print(idObject + " ", (x - 10, y - 20))
+            cv2.putText(img, idObject, (x - 10, y - 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
     # if (label == "car"):
     #     imgray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
     #     imm = imgray[y:y_plus_h, x:x_plus_w]
@@ -33,7 +42,8 @@ def draw_prediction(img, class_id, confidence, x, y, x_plus_w, y_plus_h):
 
 
 def getObject(image, net, scale):
-    super trackObject
+    super
+    trackObject
     Width = image.shape[1]
     Height = image.shape[0]
 
@@ -71,7 +81,7 @@ def getObject(image, net, scale):
         y = box[1]
         w = box[2]
         h = box[3]
-        trackObject.calc_centroid(box)
+
         draw_prediction(image, class_ids[i], confidences[i], round(x), round(y), round(x + w), round(y + h))
 
     cv2.imshow("object detection", image)
@@ -79,7 +89,7 @@ def getObject(image, net, scale):
 
 def main():
     global COLORS
-    location = '../567.mp4'
+    location = '../BDDA/training/camera_videos/567.mp4'
     args_config = './yolov3.cfg'
     args_weights = '../yolov3.weights'
     args_classes = './yolov3.txt'
@@ -96,9 +106,9 @@ def main():
 
     cap = cv2.VideoCapture(location)
     # cap = cv2.VideoCapture(0)
-    if (cap.isOpened() == False):
+    if cap.isOpened() == False:
         print("Error opening video stream or file")
-    while (cap.isOpened()):
+    while cap.isOpened():
         ret, frame = cap.read()
         if ret == True:
             getObject(frame, net, scale)
@@ -106,7 +116,6 @@ def main():
                 break
         else:
             break
-
     cap.release()
     cv2.destroyAllWindows()
 
