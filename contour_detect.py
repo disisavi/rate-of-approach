@@ -62,8 +62,3 @@ def showVideo(videoName):
 videos = ['515','526','528']
 for v in videos:
         showVideo(v)
-
-# TODO:
-#         1. Find the exact relation between rate of change of area and rate of approach
-#         2. Histogram equalisation for dark images
-#         3. Extract image from inside object in YOLO
