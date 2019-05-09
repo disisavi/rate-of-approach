@@ -18,7 +18,7 @@ class ObjTracking:
         return [v.curr_centroid for k, v in obj_Dict.items()]
 
     def calc_centroid(self, box):
-        # frame is the current frame being passed
+
         firstrun = False
         index = -1
         curr_centroids = self.centroid(box[0], box[1], box[2], box[3])
@@ -45,13 +45,13 @@ class ObjTracking:
                 objectdef = ObjectDef(min_index, curr_centroids)
                 obj_Dict[min_index] = objectdef
 
-            # print("DB^^", min_cityblock)
+
             obj_Dict[min_index].old_centroid = obj_Dict[min_index].curr_centroid
             obj_Dict[min_index].curr_centroid = curr_centroids
             obj_Dict[min_index].update_time()
 
             index = min_index
-            # print("DB!!", index, min_cityblock)
+
         else:
             index = self.assign_obj_id()
             objectdef = ObjectDef(index, curr_centroids)

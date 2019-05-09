@@ -16,12 +16,21 @@ class ObjectDef:
         self.delta = None
         self.rate_of_approach = None
         self.frame = None
+        self.timetoCollision = None
         self.update_time()
 
     def update_time(self):
         self.timeStamp = int(round(time.time() * 1000))
-        # print("Time updated for object", self.id, self.timeStamp)
 
 
 obj_Dict: Dict[int, ObjectDef] = {}
-frame_rate: int = -1
+frame_rate = -1
+
+
+def set_frame_rate(rate: float):
+    global frame_rate
+    frame_rate = rate
+
+def get_frame_rate():
+    global frame_rate
+    return frame_rate

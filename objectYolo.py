@@ -1,4 +1,3 @@
-
 import cv2
 import numpy as np
 from obect_tracker import *
@@ -39,13 +38,12 @@ def draw_prediction(img, class_id, confidence, x, y, x_plus_w, y_plus_h):
             obj_Dict[o_id].frame = imm
 
 
-
 def getObject(image, net, scale):
     super
     trackObject
     Width = image.shape[1]
     Height = image.shape[0]
-
+    # print("DEBUG P1 -- at get object")
     blob = cv2.dnn.blobFromImage(image, scale, (416, 416), (0, 0, 0), True, crop=False)
     net.setInput(blob)
     outs = net.forward(get_output_layers(net))
@@ -70,25 +68,24 @@ def getObject(image, net, scale):
                 class_ids.append(class_id)
                 confidences.append(float(confidence))
                 boxes.append([x, y, w, h])
-
+    # print("DEBUG P2 -- Objects Drawn")
     indices = cv2.dnn.NMSBoxes(boxes, confidences, conf_threshold, nms_threshold)
     # at this point all the objects for this frame are detected. Convert the orignal tracker back into the form were it will take all teh frames at once and assign ID
     # and then I will iterate through that object list and assign values like confidence etc
     for i in indices:
         i = i[0]
         box = boxes[i]
-        x = box[0]
-        y = box[1]
-        w = box[2]
-        h = box[3]
-
+        x = box[0] - 15
+        y = box[1] - 15
+        w = box[2] + 15
+        h = box[3] + 15
         draw_prediction(image, class_ids[i], confidences[i], round(x), round(y), round(x + w), round(y + h))
 
     cv2.imshow("object detection", image)
 
 
 def main():
-    global COLORS,frame_rate
+    global COLORS, frame_rate
     location = '../BDDA/training/camera_videos/567.mp4'
     args_config = './yolov3.cfg'
     args_weights = '../yolov3.weights'
@@ -110,11 +107,17 @@ def main():
         print("Error opening video stream or file")
 
     frame_rate = cap.get(cv2.CAP_PROP_FPS)
+    set_frame_rate(1 / frame_rate)
+    # print(frame_rate)
+    i = 0
     while cap.isOpened():
+        i += 1
         ret, frame = cap.read()
         if ret == True:
             getObject(frame, net, scale)
+            print("for frame ", i, "obj size", len(obj_Dict))
             cd.getCountours()
+            print("\n\n")
             if cv2.waitKey(25) & 0xFF == ord('q'):
                 break
         else:
@@ -124,3 +127,6 @@ def main():
 
 
 if __name__ == "__main__": main()
+
+# TODO
+#     Object tracking once all the objects are calculated
