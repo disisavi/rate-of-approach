@@ -1,10 +1,13 @@
+
 import cv2
 import numpy as np
+from obect_tracker import *
 import objtracking as oj
+import contour_detect as cd
 
 COLORS = None
 classes = None
-obj_Dict = {}
+
 trackObject = oj.ObjTracking()
 
 
@@ -25,20 +28,16 @@ def draw_prediction(img, class_id, confidence, x, y, x_plus_w, y_plus_h):
 
         cv2.putText(img, label, (x - 10, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
         box = [x, y, x_plus_w, y_plus_h]
-        idObject = trackObject.calc_centroid(box)
-        if (idObject > -1):
-            idObject = str(idObject)
+        o_id = trackObject.calc_centroid(box)
+        if (o_id > -1):
+            idObject = str(o_id)
             # print(idObject + " ", (x - 10, y - 20))
             cv2.putText(img, idObject, (x - 10, y - 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
-    # if (label == "car"):
-    #     imgray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
-    #     imm = imgray[y:y_plus_h, x:x_plus_w]
-    #     im = np.zeros_like(imm)
-    #     ret, thresh = cv.threshold(imm, 140, 255, 0)
-    #     contours, hierarchy = cv.findContours(thresh, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE)
-    #     cont = cv.drawContours(im, contours, -1, (255, 255, 255), 1)
-    # cv2.imshow("im",im)
-    # cv2.waitKey(0)
+
+            imgray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            imm = imgray[y:y_plus_h, x:x_plus_w]
+            obj_Dict[o_id].frame = imm
+
 
 
 def getObject(image, net, scale):
@@ -89,8 +88,8 @@ def getObject(image, net, scale):
 
 
 def main():
-    global COLORS
-    location = '../BDDA/training/camera_videos/1549.mp4'
+    global COLORS,frame_rate
+    location = '../BDDA/training/camera_videos/567.mp4'
     args_config = './yolov3.cfg'
     args_weights = '../yolov3.weights'
     args_classes = './yolov3.txt'
@@ -109,10 +108,13 @@ def main():
     # cap = cv2.VideoCapture(0)
     if cap.isOpened() == False:
         print("Error opening video stream or file")
+
+    frame_rate = cap.get(cv2.CAP_PROP_FPS)
     while cap.isOpened():
         ret, frame = cap.read()
         if ret == True:
             getObject(frame, net, scale)
+            cd.getCountours()
             if cv2.waitKey(25) & 0xFF == ord('q'):
                 break
         else:
