@@ -20,7 +20,7 @@ def calc_delta(object: ObjectDef):
         relChange = dela / object.old_area
         object.rate_of_approach = relChange * frame_rate
         if object.rate_of_approach != 0:
-            object.timetoCollision = 1 / object.rate_of_approach
+            object.timetoCollision = relChange / frame_rate
             if object.id is 1:
                 print(object.id, object.rate_of_approach, object.timetoCollision)
     # print("DEBUG D3 -- Delta ends", object.id)
@@ -30,7 +30,7 @@ def showImage(frame):
     cv2.imshow('image', frame)
 
 
-def getCountours(debug=False, boundingBoxMode=True):
+def getCountours(debug=False, boundingBoxMode=False):
     if not boundingBoxMode:
         for k, v in obj_Dict.items():
             # print("ID ", k)
@@ -42,8 +42,8 @@ def getCountours(debug=False, boundingBoxMode=True):
             image = copy.copy(frame)
             frame = cv2.blur(frame, (1, 1))
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-            frame = cv2.Canny(frame, 50, 200)
-            image = copy.copy(frame)
+            frame = cv2.Canny(frame, 100, 200)
+            # image = copy.copy(frame)
 
             contours, _ = cv2.findContours(frame, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
 

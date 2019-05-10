@@ -106,7 +106,7 @@ def main():
         print("Error opening video stream or file")
 
     frame_rate = cap.get(cv2.CAP_PROP_FPS)
-    set_frame_rate(1 / frame_rate)
+    set_frame_rate(frame_rate)
     # print(frame_rate)
     i = 0
     while cap.isOpened():
@@ -114,7 +114,7 @@ def main():
         ret, frame = cap.read()
         if ret == True:
             getObject(frame, net, scale)
-            print("for frame ", i, "obj size", len(obj_Dict))
+            # print("for frame ", i, "obj size", len(obj_Dict))
             cd.getCountours(debug)
             
             if cv2.waitKey(25) & 0xFF == ord('q'):
