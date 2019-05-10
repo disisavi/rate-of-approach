@@ -6,6 +6,7 @@ import contour_detect as cd
 
 COLORS = None
 classes = None
+debug = True
 
 trackObject = oj.ObjTracking()
 
@@ -30,11 +31,9 @@ def draw_prediction(img, class_id, confidence, x, y, x_plus_w, y_plus_h):
         o_id = trackObject.calc_centroid(box)
         if (o_id > -1):
             idObject = str(o_id)
-            # print(idObject + " ", (x - 10, y - 20))
             cv2.putText(img, idObject, (x - 10, y - 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
-
-            imgray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            imm = imgray[y:y_plus_h, x:x_plus_w]
+            # imgray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            imm = img[y:y_plus_h, x:x_plus_w, :]
             obj_Dict[o_id].frame = imm
 
 
@@ -80,8 +79,8 @@ def getObject(image, net, scale):
         w = box[2] + 15
         h = box[3] + 15
         draw_prediction(image, class_ids[i], confidences[i], round(x), round(y), round(x + w), round(y + h))
-
-    cv2.imshow("object detection", image)
+    if not debug:
+        cv2.imshow("object detection", image)
 
 
 def main():
@@ -116,8 +115,8 @@ def main():
         if ret == True:
             getObject(frame, net, scale)
             print("for frame ", i, "obj size", len(obj_Dict))
-            cd.getCountours()
-            print("\n\n")
+            cd.getCountours(debug)
+            
             if cv2.waitKey(25) & 0xFF == ord('q'):
                 break
         else:
@@ -127,6 +126,3 @@ def main():
 
 
 if __name__ == "__main__": main()
-
-# TODO
-#     Object tracking once all the objects are calculated

@@ -4,8 +4,6 @@ from scipy.spatial.distance import cityblock
 from obect_tracker import *
 
 
-
-
 class ObjTracking:
     def __init__(self):
         self.id_counter = -1
